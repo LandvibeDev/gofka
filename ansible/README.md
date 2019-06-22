@@ -3,7 +3,7 @@
 ## Docker for Mac users
 ```
 sudo easy_install pip
-sudo -H pip install docker==2.2.1 ansible==2.5.2 jinja2==2.9.6  httplib2==0.9.2 requests==2.10.0
+sudo -H pip install docker==2.2.1 ansible==2.5.2 jinja2==2.9.6 couchdb==1.1 httplib2==0.9.2 requests==2.10.0
 ```
 
 **Activate docker0 network**  
