@@ -1,0 +1,11 @@
+# This playbook prepares ansible configuration
+
+- hosts: localhost
+  tasks:
+  # Generate hosts files
+  - name: gen hosts if 'local' env is used
+    local_action: template src="{{playbook_dir}}/environments/local/hosts.j2.ini" dest="{{ playbook_dir }}/environments/local/hosts"
+    when: "'environments/local' in hosts_dir"
+
+  - name: Refresh inventory to ensure generated hosts files are used
+    meta: refresh_inventory

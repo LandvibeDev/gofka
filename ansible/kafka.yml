@@ -1,0 +1,9 @@
+# This playbook deploys an Gofka Kafka bus.
+
+- hosts: zookeepers
+  roles:
+  - zookeeper
+
+- hosts: kafkas
+  roles:
+  - kafka

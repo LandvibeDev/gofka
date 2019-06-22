@@ -1,0 +1,10 @@
+
+gofka_tmp_dir: "{{ lookup('env', 'GOFKA_TMP_DIR')|default('/tmp', true) }}"
+config_root_dir: "{{ openwhisk_tmp_dir }}/gofkaconf"
+gofka_logs_dir: "{{ openwhisk_tmp_dir }}/gofkalogs"
+
+# Set kafka configuration
+kafka_heap: '512m'
+
+env_hosts_dir: "{{ playbook_dir }}/environments/local"
+
