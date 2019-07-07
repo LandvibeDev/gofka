@@ -6,5 +6,5 @@ gofka_logs_dir: "{{ gofka_tmp_dir }}/gofkalogs"
 # Set kafka configuration
 kafka_heap: '512m'
 
-env_hosts_dir: "{{ playbook_dir }}/environments/local"
+env_hosts_dir: "{{ playbook_dir }}/environments/distributed"
 
