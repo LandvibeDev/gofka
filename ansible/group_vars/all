@@ -41,3 +41,9 @@ zookeeper_connect_string: "{% set ret = [] %}\
                              {{ ret.append( hostvars[host].ansible_host + ':' + ((zookeeper.port+loop.index-1)|string) ) }}\
                            {% endfor %}\
                            {{ ret | join(',') }}"
+
+elasticsearch:
+  version: 6.8.2
+  port: 
+  heap: "{{ kafka_heap | default('1g') }}"
+  

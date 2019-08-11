@@ -1,0 +1,28 @@
+- name: add master elasticsearch default env vars
+  set_fact:
+    elastic_env_vars:
+      "KAFKA_DEFAULT_REPLICATION_FACTOR": "{{ kafka.replicationFactor }}"
+      "KAFKA_BROKER_ID": "{{ groups['kafkas'].index(inventory_hostname) }}"
+      "KAFKA_HEAP_OPTS": "-Xmx{{ kafka.heap }} -Xms{{ kafka.heap }}"
+      "KAFKA_ZOOKEEPER_CONNECT": "{{ zookeeper_connect_string }}"
+      "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR": "{{ kafka.offsetsTopicReplicationFactor }}"
+      "KAFKA_AUTO_CREATE_TOPICS_ENABLE": "false"
+      "KAFKA_NUM_NETWORK_THREADS": "{{ kafka.networkThreads }}"
+      "TZ": "{{ docker.timezone }}"
+      "KAFKA_ADVERTISED_PORT": "{{ kafka.advertisedPort + groups['kafkas'].index(inventory_hostname) }}"
+      "KAFKA_PORT": "{{ kafka.advertisedPort + groups['kafkas'].index(inventory_hostname) }}"
+      "KAFKA_ADVERTISED_HOST_NAME": "{{ ansible_host }}"
+
+- name: "(re)start kafka using '{{ kafka_image }}' "
+  vars:
+    zookeeper_idx: "{{ groups['kafkas'].index(inventory_hostname) % (groups['zookeepers'] | length) }}"
+    kafka_image: "{{ kafka.docker_image | default ('wurstmeister/kafka:' ~ kafka.version) }}"
+  docker_container:
+    name: kafka{{ groups['kafkas'].index(inventory_hostname) }}
+    image: "{{ kafka_image }}"
+    state: started
+    recreate: true
+    restart_policy: "{{ docker.restart.policy }}"
+    env: "{{ kafka_env_vars }}"
+    ports:
+      - "{{ kafka.port + groups['kafkas'].index(inventory_hostname) }}:{{ kafka.port + groups['kafkas'].index(inventory_hostname) }}"

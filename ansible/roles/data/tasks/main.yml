@@ -1,0 +1,5 @@
+- import_tasks: deploy.yml
+  when: mode == "deploy"
+
+- import_tasks: clean.yml
+  when: mode == "clean"

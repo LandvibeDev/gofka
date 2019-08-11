@@ -1,0 +1,13 @@
+# This playbook deploys an Gofka Kafka bus.
+
+- hosts: master
+  roles:
+  - master
+
+- hosts: data
+  roles:
+  - data
+
+- hosts: coodinator
+  roles:
+  - coordinator
