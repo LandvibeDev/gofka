@@ -34,7 +34,7 @@ ansible/local-deploy.sh
 
 # User-specific stuff
 .idea
-
+*iml
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -182,11 +182,7 @@ typings/
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
+__debug_bin
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

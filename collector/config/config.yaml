@@ -1,0 +1,9 @@
+kafka:
+  hosts: 172.17.0.1:9093
+  topic:
+    name: log
+    num-partitions: 1
+    replication-factor: 1
+
+server:
+  port: 8080
