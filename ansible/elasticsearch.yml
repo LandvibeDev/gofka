@@ -4,10 +4,3 @@
   roles:
   - master
 
-- hosts: data
-  roles:
-  - data
-
-- hosts: coodinator
-  roles:
-  - coordinator

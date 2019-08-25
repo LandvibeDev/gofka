@@ -1,28 +1,28 @@
-- name: add master elasticsearch default env vars
-  set_fact:
-    elastic_env_vars:
-      "KAFKA_DEFAULT_REPLICATION_FACTOR": "{{ kafka.replicationFactor }}"
-      "KAFKA_BROKER_ID": "{{ groups['kafkas'].index(inventory_hostname) }}"
-      "KAFKA_HEAP_OPTS": "-Xmx{{ kafka.heap }} -Xms{{ kafka.heap }}"
-      "KAFKA_ZOOKEEPER_CONNECT": "{{ zookeeper_connect_string }}"
-      "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR": "{{ kafka.offsetsTopicReplicationFactor }}"
-      "KAFKA_AUTO_CREATE_TOPICS_ENABLE": "false"
-      "KAFKA_NUM_NETWORK_THREADS": "{{ kafka.networkThreads }}"
-      "TZ": "{{ docker.timezone }}"
-      "KAFKA_ADVERTISED_PORT": "{{ kafka.advertisedPort + groups['kafkas'].index(inventory_hostname) }}"
-      "KAFKA_PORT": "{{ kafka.advertisedPort + groups['kafkas'].index(inventory_hostname) }}"
-      "KAFKA_ADVERTISED_HOST_NAME": "{{ ansible_host }}"
+# This role will install ElasticSearch master in group 'elasticsearch' in the environment inventory
 
-- name: "(re)start kafka using '{{ kafka_image }}' "
+- name: add elasticsearch default env vars
+  set_fact:
+    es_env_vars:
+      "node.name": "master-node"
+      "cluster.name": "gofka_clsuter"
+      "node.master": "true"
+      "node.data": "false"
+      "network.host": "0.0.0.0"
+      "transport.tcp.port": "9300"
+      "transport.tcp.compress": "true"
+      "bootstrap.memory_lock": "true"
+      "ES_JAVA_OPTS": "-Xmx256m -Xms256m"
+
+- name: "(re)start elasticsearch using '{{ es_image }}' "
   vars:
-    zookeeper_idx: "{{ groups['kafkas'].index(inventory_hostname) % (groups['zookeepers'] | length) }}"
-    kafka_image: "{{ kafka.docker_image | default ('wurstmeister/kafka:' ~ kafka.version) }}"
+    es_image: "docker.elastic.co/elasticsearch/elasticsearch:6.8.2"
   docker_container:
-    name: kafka{{ groups['kafkas'].index(inventory_hostname) }}
-    image: "{{ kafka_image }}"
-    state: started
-    recreate: true
-    restart_policy: "{{ docker.restart.policy }}"
-    env: "{{ kafka_env_vars }}"
+    name: "es_master"
+    image: "{{ es_image }}"
+    env: "{{ es_env_vars }}"
     ports:
-      - "{{ kafka.port + groups['kafkas'].index(inventory_hostname) }}:{{ kafka.port + groups['kafkas'].index(inventory_hostname) }}"
+      - "9300:9300"
+    volumes:
+      - ./data/master_es:/usr/share/elasticsearch/data:rw
+      - ./log/master_es:/usr/share/elasticsearch/log:rw
+
